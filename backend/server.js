@@ -12,7 +12,7 @@ import profileRoutes from './routes/profileRoutes.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 
 // ES Module __dirname equivalent
 const __filename = fileURLToPath(import.meta.url);
@@ -26,7 +26,7 @@ app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://zxf19970424:OUmc8I5KpSeBZyoL@cluster0.ve4nmrt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 mongoose.connect(MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
