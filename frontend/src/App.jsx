@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage'
 import AdminDashboard from './pages/AdminDashboard'
 import ProfileEditPage from './pages/ProfileEditPage'
 import ProjectExperienceEditPage from './pages/ProjectExperienceEditPage'
+import ProjectEditPage from './pages/ProjectEditPage' // 新增的Project编辑页面
 import AddEducation from './pages/AddEducation'
 import EditEducation from './pages/EditEducation'
 import BlogEditPage from './pages/BlogEditPage'
@@ -58,6 +59,20 @@ const App = () => {
           </ProtectedRoute>
         } />
         
+        {/* Project routes - for editing Project model projects */}
+        <Route path="/admin/project-model/new" element={
+          <ProtectedRoute>
+            <ProjectEditPage />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/admin/project-model/edit/:id" element={
+          <ProtectedRoute>
+            <ProjectEditPage />
+          </ProtectedRoute>
+        } />
+        
+        {/* Project Experience routes - for editing Profile's projectExperience */}
         <Route path="/admin/project/new" element={
           <ProtectedRoute>
             <ProjectExperienceEditPage />

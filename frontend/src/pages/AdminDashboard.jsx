@@ -108,6 +108,18 @@ function AdminDashboard() {
         bullets: { en: [], it: [] }
       };
       
+      // Check if a project with the same name already exists in projectExperience
+      if (profile && profile.projectExperience) {
+        const existingProject = profile.projectExperience.find(
+          p => p.name.toLowerCase() === project.name.toLowerCase()
+        );
+        
+        if (existingProject) {
+          toast.error(`A project named "${project.name}" already exists in Project Experience. Please rename before importing.`);
+          return;
+        }
+      }
+      
       // Save directly as project experience instead of project
       await profileService.addProjectExperience(projectData);
       toast.success(`Project "${project.name}" saved as experience`);
@@ -328,7 +340,7 @@ function AdminDashboard() {
               <div>
                 <div className="flex justify-between mb-4">
                   <h2 className="text-2xl font-bold">Projects</h2>
-                  <button className="btn btn-primary btn-sm" onClick={() => navigate('/admin/project/new')}>
+                  <button className="btn btn-primary btn-sm" onClick={() => navigate('/admin/project-model/new')}>
                     Add New Project
                   </button>
                 </div>
@@ -359,7 +371,7 @@ function AdminDashboard() {
                             <td className="flex gap-2">
                               <button 
                                 className="btn btn-sm btn-info"
-                                onClick={() => navigate(`/admin/project/edit/${project._id}`)}
+                                onClick={() => navigate(`/admin/project-model/edit/${project._id}`)}
                               >
                                 Edit
                               </button>

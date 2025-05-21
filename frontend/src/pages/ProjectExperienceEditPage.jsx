@@ -52,47 +52,71 @@ function ProjectExperienceEditPage() {
       return;
     }
     
-    const fetchData = async () => {
+  // In ProjectExperienceEditPage.jsx
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      // First try to find the project in the Project model
       try {
-        setLoading(true);
-        // Fetch profile data first
-        const profileRes = await profileService.getProfile();
-        
-        if (!profileRes.data) {
-          // If no data is returned, create an empty profile
-          setProfile({ projectExperience: [] });
+        const projectRes = await projectService.getProjectById(id);
+        if (projectRes.data) {
+          // Convert Project format to ProjectExperience format
+          const projectData = {
+            name: projectRes.data.name,
+            description: { 
+              en: projectRes.data.description, 
+              it: projectRes.data.description 
+            },
+            technologies: projectRes.data.technologies || [],
+            year: new Date().getFullYear().toString(),
+            role: 'Developer',
+            bullets: { en: [], it: [] },
+            link: projectRes.data.repoUrl,
+            image: projectRes.data.imageUrl
+          };
+          setProject(projectData);
           setLoading(false);
           return;
         }
-        
-        setProfile(profileRes.data || { projectExperience: [] });
-        
-        // If we have an ID, find the specific project experience
-        if (id && profileRes.data && profileRes.data.projectExperience) {
-          const foundProject = profileRes.data.projectExperience.find(
-            proj => proj._id === id
-          );
-          
-          if (foundProject) {
-            setProject(foundProject);
-          } else {
-            toast.error('Project experience not found');
-            navigate('/admin', { state: { activeTab: 'experiences' } });
-          }
-        }
-        
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setLoading(false);
-        // Create empty profile with projectExperience array if fetch fails
+      } catch (projectError) {
+        console.log('Project not found in Project model, trying Profile model');
+      }
+      
+      // If not found in Project model, try in Profile's projectExperience
+      const profileRes = await profileService.getProfile();
+      
+      if (!profileRes.data) {
         setProfile({ projectExperience: [] });
-        if (id) {
-          toast.error('Project not found. You can create a new one.');
+        setLoading(false);
+        return;
+      }
+      
+      setProfile(profileRes.data || { projectExperience: [] });
+      
+      if (id && profileRes.data && profileRes.data.projectExperience) {
+        const foundProject = profileRes.data.projectExperience.find(
+          proj => proj._id === id
+        );
+        
+        if (foundProject) {
+          setProject(foundProject);
+        } else {
+          toast.error('Project experience not found');
           navigate('/admin', { state: { activeTab: 'experiences' } });
         }
       }
-    };
+      
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setLoading(false);
+      setProfile({ projectExperience: [] });
+      if (id) {
+        toast.error('Project not found. You can create a new one.');
+        navigate('/admin', { state: { activeTab: 'experiences' } });
+      }
+    }
+  };
     
     fetchData();
   }, [isAdmin, navigate, id]);

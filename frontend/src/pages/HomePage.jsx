@@ -156,10 +156,14 @@ function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {featuredProjects.map((project) => (
                 <div key={project._id} className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-                  {project.imageUrl && (
+                  {project.imageUrl ? (
                     <figure className="px-6 pt-6">
                       <img src={project.imageUrl} alt={project.name} className="rounded-xl h-48 w-full object-cover" />
                     </figure>
+                  ) : (
+                    <div className="bg-gray-700 text-white h-48 flex items-center justify-center p-4 mx-6 mt-6 rounded-xl">
+                      <h3 className="text-2xl font-bold text-center text-white">{project.name}</h3>
+                    </div>
                   )}
                   <div className="card-body">
                     <h2 className="card-title">{project.name}</h2>
