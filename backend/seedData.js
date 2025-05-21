@@ -8,7 +8,7 @@ import Profile from './models/profileModel.js';
 dotenv.config();
 
 // MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://zxf19970424:OUmc8I5KpSeBZyoL@cluster0.ve4nmrt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 // Default profile data
 const defaultProfile = {
