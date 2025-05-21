@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-hot-toast';
 import { projectService } from '../services/api';
 import GuideBar from './GuideBar';
+import ImageUpload from '../components/admin/ImageUpload';
 
 function ProjectEditPage() {
   const { isAdmin } = useAuth();
@@ -87,6 +88,14 @@ function ProjectEditPage() {
     });
   };
   
+  // Handle image update from the upload component
+  const handleImageUpdate = (imageUrl) => {
+    setFormData({
+      ...formData,
+      imageUrl: imageUrl
+    });
+  };
+  
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -150,6 +159,14 @@ function ProjectEditPage() {
               {id ? 'Edit Project' : 'Create New Project'}
             </h2>
             
+            {/* Add Image Upload Component */}
+            <ImageUpload 
+              currentImage={formData.imageUrl} 
+              onImageUpdate={handleImageUpdate}
+              folder="project_images"
+              label="Project Image"
+            />
+            
             <form onSubmit={handleSubmit}>
               <div className="form-control w-full mb-4">
                 <label className="label">
@@ -211,7 +228,7 @@ function ProjectEditPage() {
               
               <div className="form-control w-full mb-4">
                 <label className="label">
-                  <span className="label-text">Image URL (Optional)</span>
+                  <span className="label-text">Image URL (Optional - or use upload above)</span>
                 </label>
                 <input 
                   type="url" 

@@ -8,6 +8,7 @@ import userRoutes from './routes/userRoutes.js';
 import blogRoutes from './routes/blogRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
 import profileRoutes from './routes/profileRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js';
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Root route
 app.get('/', (req, res) => {

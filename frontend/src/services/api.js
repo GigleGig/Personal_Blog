@@ -144,6 +144,21 @@ export const projectService = {
   }
 };
 
+// Upload services
+export const uploadService = {
+  uploadImage: async (file, folder = 'project_images') => {
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('folder', folder);
+    
+    return api.post('/upload/image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+  }
+};
+
 // Profile services
 export const profileService = {
   getProfile: async () => {
