@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react'
 import GuideBar from './GuideBar'
 import { motion } from 'framer-motion'
 import { profileService } from '../services/api'
+import ExperienceCard from '../components/ExperienceCard'
+import ErrorBoundary from '../components/ErrorBoundary'
+import '../styles/card.css'
 
 function PersonalDetail() {
   const [profile, setProfile] = useState(null);
@@ -53,7 +56,35 @@ function PersonalDetail() {
       {
         institution: 'University of Bologna (UNIBO)',
         degree: { en: 'Computer Science', it: 'Informatica' },
-        location: 'Bologna, Italy'
+        location: 'Bologna, Italy',
+        from: new Date('2022-09-01'),
+        to: new Date('2024-06-30'),
+        description: { 
+          en: 'Focus on AI, machine learning, and software engineering',
+          it: 'Focus su IA, machine learning e ingegneria del software' 
+        }
+      },
+      {
+        institution: 'Beijing University of Technology',
+        degree: { en: 'Computer Science (Bachelor)', it: 'Informatica (Laurea Triennale)' },
+        location: 'Beijing, China',
+        from: new Date('2017-09-01'),
+        to: new Date('2021-06-30'),
+        description: { 
+          en: 'Studied fundamentals of computer science, data structures, and algorithms',
+          it: 'Studio dei fondamenti dell\'informatica, strutture dati e algoritmi' 
+        }
+      },
+      {
+        institution: 'Hangzhou Technical Institute',
+        degree: { en: 'Web Development Certificate', it: 'Certificato di Sviluppo Web' },
+        location: 'Hangzhou, China',
+        from: new Date('2016-03-01'),
+        to: new Date('2016-08-30'),
+        description: { 
+          en: 'Intensive training in web technologies and front-end development',
+          it: 'Formazione intensiva in tecnologie web e sviluppo front-end' 
+        }
       }
     ],
     projectExperience: [
@@ -75,6 +106,48 @@ function PersonalDetail() {
             'Guidato lo sviluppo di un modello di machine learning per la classificazione dei prodotti alimentari',
             'Utilizzato TensorFlow, Keras e OpenCV per addestrare modelli basati su CNN',
             'Raggiunto alta precisione di classificazione grazie all\'aumento dei dati e all\'ingegneria delle caratteristiche'
+          ]
+        }
+      },
+      {
+        name: 'Personal Blog Platform',
+        description: { 
+          en: 'Full-stack web application for personal blogging with modern UI.',
+          it: 'Applicazione web full-stack per il blogging personale con interfaccia utente moderna.' 
+        },
+        technologies: ['React', 'Node.js', 'MongoDB', 'Express'],
+        year: '2023',
+        bullets: {
+          en: [
+            'Designed and implemented a responsive blog platform with React and TailwindCSS',
+            'Created RESTful API endpoints with Node.js and Express',
+            'Implemented authentication, content management, and media upload features'
+          ],
+          it: [
+            'Progettato e implementato una piattaforma di blog responsive con React e TailwindCSS',
+            'Creato endpoint API RESTful con Node.js ed Express',
+            'Implementato funzionalità di autenticazione, gestione dei contenuti e caricamento di media'
+          ]
+        }
+      },
+      {
+        name: 'Smart Home IoT System',
+        description: { 
+          en: 'IoT system for home automation with mobile app control.',
+          it: 'Sistema IoT per la domotica con controllo tramite app mobile.' 
+        },
+        technologies: ['Arduino', 'Raspberry Pi', 'MQTT', 'React Native'],
+        year: '2022',
+        bullets: {
+          en: [
+            'Designed an IoT system for controlling home devices using Arduino and Raspberry Pi',
+            'Implemented MQTT protocol for device communication',
+            'Developed a React Native mobile app for remote control and monitoring'
+          ],
+          it: [
+            'Progettato un sistema IoT per controllare dispositivi domestici utilizzando Arduino e Raspberry Pi',
+            'Implementato il protocollo MQTT per la comunicazione tra dispositivi',
+            'Sviluppato un\'app mobile React Native per il controllo e monitoraggio remoto'
           ]
         }
       }
@@ -102,6 +175,54 @@ function PersonalDetail() {
             'Condotto test utente e fornito feedback per migliorare l\'esperienza di gioco'
           ]
         }
+      },
+      {
+        title: { en: 'Web Developer (Part-time)', it: 'Sviluppatore Web (Part-time)' },
+        company: 'Shanghai Digital Solutions',
+        location: 'China',
+        from: new Date('2020-06-01'),
+        to: new Date('2021-05-01'),
+        description: { 
+          en: 'Developed responsive websites and web applications for various clients.',
+          it: 'Sviluppato siti web responsivi e applicazioni web per vari clienti.' 
+        },
+        responsibilities: {
+          en: [
+            'Built responsive websites using HTML, CSS, JavaScript, and Vue.js',
+            'Implemented backend functionality with Node.js and Express',
+            'Integrated payment gateways and third-party APIs'
+          ],
+          it: [
+            'Creato siti web responsivi utilizzando HTML, CSS, JavaScript e Vue.js',
+            'Implementato funzionalità backend con Node.js ed Express',
+            'Integrato gateway di pagamento e API di terze parti'
+          ]
+        },
+        skills: ['HTML', 'CSS', 'JavaScript', 'Vue.js', 'Node.js']
+      },
+      {
+        title: { en: 'Research Assistant', it: 'Assistente di Ricerca' },
+        company: 'University of Bologna',
+        location: 'Italy',
+        from: new Date('2022-10-01'),
+        to: new Date('2023-06-01'),
+        description: { 
+          en: 'Conducted research on machine learning applications in natural language processing.',
+          it: 'Condotto ricerche sulle applicazioni di machine learning nell\'elaborazione del linguaggio naturale.' 
+        },
+        responsibilities: {
+          en: [
+            'Implemented and tested various NLP models for sentiment analysis',
+            'Conducted experiments to improve model accuracy and performance',
+            'Published a research paper on the findings in a conference proceeding'
+          ],
+          it: [
+            'Implementato e testato vari modelli NLP per l\'analisi del sentiment',
+            'Condotto esperimenti per migliorare l\'accuratezza e le prestazioni del modello',
+            'Pubblicato un articolo di ricerca sui risultati in un atto di conferenza'
+          ]
+        },
+        skills: ['Python', 'PyTorch', 'NLTK', 'Scikit-learn', 'Research']
       }
     ],
     social: {
@@ -180,6 +301,7 @@ function PersonalDetail() {
           </div>
         ) : (
           <motion.div variants={containerVariants} initial="hidden" animate="visible">
+            {/* Profile Card */}
             <motion.div 
               className="card bg-base-200 shadow-xl mx-auto max-w-4xl"
               variants={itemVariants}
@@ -217,8 +339,20 @@ function PersonalDetail() {
                       className="flex gap-2 mb-4"
                       variants={itemVariants}
                     >
-                      <div className="badge badge-primary">UNIBO</div>
-                      <div className="badge badge-primary">BOLOGNA</div>
+                      <div className="badge badge-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                          <path d="M22 9L12 5 2 9l10 4 10-4v6"></path>
+                          <path d="M6 10.6V16c0 1 1.5 2 3.5 2s3.5-1 3.5-2v-5.4"></path>
+                        </svg>
+                        UNIBO
+                      </div>
+                      <div className="badge badge-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                          <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/>
+                          <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        BOLOGNA
+                      </div>
                     </motion.div>
                     <motion.div 
                       className="flex flex-wrap gap-2"
@@ -349,159 +483,38 @@ function PersonalDetail() {
                   })}
                 </div>
                 
-                {/* Project Experience Section */}
+                {/* Experience Sections using the flip card component */}
                 {displayProfile.projectExperience && displayProfile.projectExperience.length > 0 && (
-                  <>
-                    <motion.h3 
-                      className="text-2xl font-bold mt-6 mb-2"
-                      variants={itemVariants}
-                    >
-                      {language === 'en' ? 'Project Experience' : 'Esperienza di Progetto'}
-                    </motion.h3>
-                    
-                    {displayProfile.projectExperience.map((project, index) => (
-                      <motion.div 
-                        key={index} 
-                        className="card bg-base-100 shadow-sm mb-4"
-                        variants={itemVariants}
-                      >
-                        <div className="card-body">
-                          <div className="flex flex-col md:flex-row justify-between">
-                            <h4 className="card-title text-xl">{project.name}</h4>
-                            <div className="badge badge-neutral my-1 md:my-0">{project.year}</div>
-                          </div>
-                          
-                          {project.role && (
-                            <p className="text-lg opacity-80">{project.role}</p>
-                          )}
-                          
-                          <p className="my-2">{getLocalizedContent(project.description)}</p>
-                          
-                          {/* Project bullets/key points */}
-                          {project.bullets && project.bullets[language] && project.bullets[language].length > 0 && (
-                            <ul className="list-disc list-inside mt-2 space-y-1">
-                              {project.bullets[language].map((bullet, idx) => (
-                                <li key={idx}>{bullet}</li>
-                              ))}
-                            </ul>
-                          )}
-                          
-                          {/* Technologies used */}
-                          {project.technologies && project.technologies.length > 0 && (
-                            <div className="flex flex-wrap gap-1 mt-3">
-                              {project.technologies.map((tech, idx) => (
-                                <span key={idx} className="badge badge-sm">{tech}</span>
-                              ))}
-                            </div>
-                          )}
-                          
-                          {/* Project link if available */}
-                          {project.link && (
-                            <div className="card-actions justify-end mt-2">
-                              <a 
-                                href={project.link} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className="btn btn-sm btn-primary"
-                              >
-                                {language === 'en' ? 'View Project' : 'Vedi Progetto'}
-                              </a>
-                            </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    ))}
-                  </>
+                  <ErrorBoundary>
+                    <ExperienceCard
+                      items={displayProfile.projectExperience}
+                      title={language === 'en' ? 'Project Experience' : 'Esperienza di Progetto'}
+                      language={language}
+                      getLocalizedContent={getLocalizedContent}
+                    />
+                  </ErrorBoundary>
                 )}
                 
                 {displayProfile.education && displayProfile.education.length > 0 && (
-                  <>
-                    <motion.h3 
-                      className="text-2xl font-bold mt-6 mb-2"
-                      variants={itemVariants}
-                    >
-                      {language === 'en' ? 'Education' : 'Formazione'}
-                    </motion.h3>
-                    {displayProfile.education.map((edu, index) => (
-                      <motion.div 
-                        key={index} 
-                        className="mb-4"
-                        variants={itemVariants}
-                      >
-                        <h4 className="text-xl font-bold">{edu.institution}</h4>
-                        <p className="text-sm opacity-70">{getLocalizedContent(edu.degree)}</p>
-                        {edu.location && <p className="text-sm opacity-70">{edu.location}</p>}
-                        {edu.from && edu.to && (
-                          <p className="text-sm opacity-70">
-                            {new Date(edu.from).getFullYear()} - {edu.current ? (language === 'en' ? 'Present' : 'Presente') : new Date(edu.to).getFullYear()}
-                          </p>
-                        )}
-                        {edu.description && <p className="mt-1">{getLocalizedContent(edu.description)}</p>}
-                      </motion.div>
-                    ))}
-                  </>
+                  <ErrorBoundary>
+                    <ExperienceCard
+                      items={displayProfile.education}
+                      title={language === 'en' ? 'Education' : 'Formazione'}
+                      language={language}
+                      getLocalizedContent={getLocalizedContent}
+                    />
+                  </ErrorBoundary>
                 )}
                 
                 {displayProfile.experience && displayProfile.experience.length > 0 && (
-                  <>
-                    <motion.h3 
-                      className="text-2xl font-bold mt-6 mb-2"
-                      variants={itemVariants}
-                    >
-                      {language === 'en' ? 'Professional Experience' : 'Esperienza Professionale'}
-                    </motion.h3>
-                    {displayProfile.experience.map((exp, index) => (
-                      <motion.div 
-                        key={index} 
-                        className="card bg-base-100 shadow-sm mb-4"
-                        variants={itemVariants}
-                      >
-                        <div className="card-body">
-                          <h4 className="card-title">{getLocalizedContent(exp.title)}</h4>
-                          <div className="flex flex-col md:flex-row md:justify-between">
-                            <p className="text-lg">{exp.company}</p>
-                            <p className="text-sm opacity-70">
-                              {exp.from && (
-                                <>
-                                  {new Date(exp.from).toLocaleDateString(language === 'en' ? 'en-US' : 'it-IT', { 
-                                    year: 'numeric', 
-                                    month: 'short'
-                                  })} - {exp.current ? (language === 'en' ? 'Present' : 'Presente') : new Date(exp.to).toLocaleDateString(language === 'en' ? 'en-US' : 'it-IT', { 
-                                    year: 'numeric', 
-                                    month: 'short'
-                                  })}
-                                </>
-                              )}
-                            </p>
-                          </div>
-                          <p className="text-sm opacity-70 mb-2">{exp.location}</p>
-                          
-                          <p>{getLocalizedContent(exp.description)}</p>
-                          
-                          {/* Responsibilities */}
-                          {exp.responsibilities && exp.responsibilities[language] && exp.responsibilities[language].length > 0 && (
-                            <div className="mt-2">
-                              <p className="font-bold">{language === 'en' ? 'Responsibilities:' : 'Responsabilità:'}</p>
-                              <ul className="list-disc list-inside mt-1 space-y-1">
-                                {exp.responsibilities[language].map((item, idx) => (
-                                  <li key={idx}>{item}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                          
-                          {/* Skills used */}
-                          {exp.skills && exp.skills.length > 0 && (
-                            <div className="flex flex-wrap gap-1 mt-3">
-                              {exp.skills.map((skill, idx) => (
-                                <span key={idx} className="badge badge-sm">{skill}</span>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    ))}
-                  </>
+                  <ErrorBoundary>
+                    <ExperienceCard
+                      items={displayProfile.experience}
+                      title={language === 'en' ? 'Professional Experience' : 'Esperienza Professionale'}
+                      language={language}
+                      getLocalizedContent={getLocalizedContent}
+                    />
+                  </ErrorBoundary>
                 )}
                 
                 <motion.h3 

@@ -2,3 +2,13 @@
 @plugin "daisyui" {
     themes: "abyss","acid","aqua","autumn","black","bumblebee","business","caramellatte","cmyk","coffee","corporate","cupcake","cyberpunk","dark","dim","dracula","emerald","fantasy","forest","garden","halloween","lemonade","light","lofi","luxury","night","nord","pastel","retro","silk","sunset","synthwave","valentine","winter","wireframe";
 }
+
+/* Custom styles for 3D card effects */
+.perspective-1000 {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.backdrop-blur-md {
+  backdrop-filter: blur(8px);
+}

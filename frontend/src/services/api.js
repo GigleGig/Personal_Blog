@@ -122,7 +122,25 @@ export const projectService = {
     return api.delete(`/projects/${id}`);
   },
   importGithubProjects: async (username) => {
-    return api.post('/projects/import-github', { username });
+    // Import GitHub projects
+    try {
+      const response = await api.post('/projects/import-github', { username });
+      return response;
+    } catch (error) {
+      console.error('GitHub import error:', error);
+      throw error;
+    }
+  },
+  fetchAndPreviewGithubProjects: async (username) => {
+    // Get GitHub project list but do not import
+    try {
+      // Use GitHub API directly to get user repository list
+      const response = await axios.get(`https://api.github.com/users/${username}/repos`);
+      return { data: response.data };
+    } catch (error) {
+      console.error('GitHub preview error:', error);
+      throw error;
+    }
   }
 };
 

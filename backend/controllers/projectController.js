@@ -141,10 +141,25 @@ export const importGithubProjects = async (req, res) => {
       return res.status(400).json({ message: 'GitHub username is required' });
     }
     
-    const response = await fetch(`https://api.github.com/users/${username}/repos`);
+    // Use GitHub token from environment variables for authentication
+    const githubToken = process.env.GITHUB_TOKEN;
+    
+    if (!githubToken) {
+      return res.status(500).json({ message: 'GitHub token not configured on server' });
+    }
+    
+    const headers = {
+      'Authorization': `token ${githubToken}`,
+      'Accept': 'application/vnd.github.v3+json'
+    };
+    
+    const response = await fetch(`https://api.github.com/users/${username}/repos`, { headers });
     
     if (!response.ok) {
-      return res.status(400).json({ message: 'Failed to fetch GitHub repositories' });
+      return res.status(400).json({ 
+        message: 'Failed to fetch GitHub repositories',
+        error: await response.text()
+      });
     }
     
     const repos = await response.json();
@@ -158,12 +173,20 @@ export const importGithubProjects = async (req, res) => {
       const existingProject = await Project.findOne({ repoUrl: repo.html_url });
       
       if (!existingProject) {
+        // Fetch additional repository details with token
+        const detailsResponse = await fetch(repo.url, { headers });
+        const details = await detailsResponse.json();
+        
+        // Get languages used in the repository
+        const languagesResponse = await fetch(repo.languages_url, { headers });
+        const languages = await languagesResponse.json();
+        
         const newProject = await Project.create({
           name: repo.name,
           description: repo.description || 'No description available',
           repoUrl: repo.html_url,
           demoUrl: repo.homepage || '',
-          technologies: repo.language ? [repo.language] : [],
+          technologies: Object.keys(languages),
           featured: false,
           order: 0
         });

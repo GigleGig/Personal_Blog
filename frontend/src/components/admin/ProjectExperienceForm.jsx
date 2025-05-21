@@ -68,13 +68,13 @@ function ProjectExperienceForm({ existingProject, onSave, onCancel }) {
   // Handle bullets changes
   const handleBulletsChange = (e, lang) => {
     const { value } = e.target;
-    const bulletList = value.split('\n').map(bullet => bullet.trim()).filter(bullet => bullet !== '');
     
+    // Store the value directly, preserving all newlines
     setFormData({
       ...formData,
       bullets: {
         ...formData.bullets,
-        [lang]: bulletList
+        [lang]: value.split('\n')
       }
     });
   };
@@ -227,6 +227,7 @@ function ProjectExperienceForm({ existingProject, onSave, onCancel }) {
               value={formData.description[activeLang]} 
               onChange={(e) => handleMultilingualChange(e, activeLang)} 
               className="textarea textarea-bordered w-full h-24" 
+              style={{ whiteSpace: 'pre-wrap' }}
               placeholder={activeLang === 'en' 
                 ? 'Project description in English...' 
                 : 'Descrizione del progetto in italiano...'}
@@ -241,6 +242,7 @@ function ProjectExperienceForm({ existingProject, onSave, onCancel }) {
               value={formData.bullets[activeLang].join('\n')} 
               onChange={(e) => handleBulletsChange(e, activeLang)} 
               className="textarea textarea-bordered w-full h-32" 
+              style={{ whiteSpace: 'pre-wrap' }}
               placeholder={activeLang === 'en' 
                 ? '• Led the development of a machine learning model\n• Utilized TensorFlow, Keras, and OpenCV\n• Achieved high classification accuracy' 
                 : '• Guidato lo sviluppo di un modello di machine learning\n• Utilizzato TensorFlow, Keras e OpenCV\n• Raggiunto alta precisione di classificazione'}

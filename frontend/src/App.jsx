@@ -8,6 +8,9 @@ import LoginPage from './pages/LoginPage'
 import AdminDashboard from './pages/AdminDashboard'
 import ProfileEditPage from './pages/ProfileEditPage'
 import ProjectExperienceEditPage from './pages/ProjectExperienceEditPage'
+import AddEducation from './pages/AddEducation'
+import EditEducation from './pages/EditEducation'
+import BlogEditPage from './pages/BlogEditPage'
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -64,6 +67,30 @@ const App = () => {
         <Route path="/admin/project/edit/:id" element={
           <ProtectedRoute>
             <ProjectExperienceEditPage />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/admin/education/new" element={
+          <ProtectedRoute>
+            <AddEducation />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/admin/education/edit/:id" element={
+          <ProtectedRoute>
+            <EditEducation />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/admin/blog/new" element={
+          <ProtectedRoute>
+            <BlogEditPage />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/admin/blog/edit/:id" element={
+          <ProtectedRoute>
+            <BlogEditPage />
           </ProtectedRoute>
         } />
         

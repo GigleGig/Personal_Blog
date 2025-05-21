@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-hot-toast';
 import { profileService } from '../services/api';
@@ -10,6 +10,7 @@ function ProjectExperienceEditPage() {
   const { isAdmin } = useAuth();
   const navigate = useNavigate();
   const { id } = useParams(); // For editing existing project experience
+  const location = useLocation(); // Get the location object
   const [project, setProject] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -22,11 +23,48 @@ function ProjectExperienceEditPage() {
       return;
     }
     
+    // Check if the project is coming from the GitHub import page
+    const githubProjectData = sessionStorage.getItem('github_project_edit');
+    if (githubProjectData && location.state?.fromGithub) {
+      try {
+        const parsedData = JSON.parse(githubProjectData);
+        // Format GitHub data to match project experience format
+        const formattedData = {
+          ...parsedData,
+          description: parsedData.description 
+            ? { en: parsedData.description, it: parsedData.description } 
+            : { en: '', it: '' },
+          bullets: parsedData.bullets || { en: [], it: [] },
+          technologies: parsedData.technologies || []
+        };
+        setProject(formattedData);
+        sessionStorage.removeItem('github_project_edit'); // Clear after use
+        setLoading(false);
+        return;
+      } catch (error) {
+        console.error('Error parsing GitHub project data:', error);
+      }
+    }
+    
+    // If there is no ID, it means it is a new project, so do not try to get existing project
+    if (!id) {
+      setLoading(false);
+      return;
+    }
+    
     const fetchData = async () => {
       try {
         setLoading(true);
         // Fetch profile data first
         const profileRes = await profileService.getProfile();
+        
+        if (!profileRes.data) {
+          // If no data is returned, create an empty profile
+          setProfile({ projectExperience: [] });
+          setLoading(false);
+          return;
+        }
+        
         setProfile(profileRes.data || { projectExperience: [] });
         
         // If we have an ID, find the specific project experience
@@ -39,7 +77,7 @@ function ProjectExperienceEditPage() {
             setProject(foundProject);
           } else {
             toast.error('Project experience not found');
-            navigate('/admin');
+            navigate('/admin', { state: { activeTab: 'experiences' } });
           }
         }
         
@@ -49,7 +87,10 @@ function ProjectExperienceEditPage() {
         setLoading(false);
         // Create empty profile with projectExperience array if fetch fails
         setProfile({ projectExperience: [] });
-        toast.error('Creating new project as data could not be loaded');
+        if (id) {
+          toast.error('Project not found. You can create a new one.');
+          navigate('/admin', { state: { activeTab: 'experiences' } });
+        }
       }
     };
     
@@ -94,12 +135,23 @@ function ProjectExperienceEditPage() {
           <h1 className="text-3xl font-bold">
             {id ? 'Edit Project Experience' : 'Add Project Experience'}
           </h1>
-          <button 
-            className="btn btn-outline" 
-            onClick={() => navigate('/admin')}
-          >
-            Back to Dashboard
-          </button>
+          <div className="flex gap-2">
+            <button 
+              className="btn btn-outline btn-square" 
+              onClick={() => navigate('/admin', { state: { activeTab: id ? 'experiences' : 'projects' } })}
+              title={id ? "Back to Project Experiences" : "Back to Projects"}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+            </button>
+            <button 
+              className="btn btn-outline" 
+              onClick={() => navigate('/admin')}
+            >
+              Back to Dashboard
+            </button>
+          </div>
         </div>
         
         {loading ? (
